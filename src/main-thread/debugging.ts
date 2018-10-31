@@ -70,7 +70,7 @@ export function readableMessageFromWorker(message: MessageFromWorker): Object {
     const addEvents = data[TransferrableKeys.addedEvents];
     return {
       type: 'HYDRATE',
-      nodes: readableHydratableNode(nodes),
+      nodes: nodes.map(node => readableHydratableNode(node)),
       addEvents: addEvents.map(e => readableTransferrableEventSubscriptionChange(e)),
       // Omit 'strings' key.
     };

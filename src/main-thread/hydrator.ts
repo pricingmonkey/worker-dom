@@ -96,13 +96,13 @@ function hydrateNode(transferNode: HydrateableNode, node: HTMLElement | Text, wo
 
 /**
  * Hydrate a root from the worker thread by comparing with the main thread representation.
- * @param skeleton root of the background thread content.
+ * @param skeletons root of the background thread content.
  * @param addEvents events needing subscription from the background thread content.
  * @param baseElement root of the main thread content to compare against.
  * @param worker worker issuing the upgrade request.
  */
 export function hydrate(
-  skeleton: HydrateableNode,
+  skeletons: Array<HydrateableNode>,
   stringValues: Array<string>,
   addEvents: Array<TransferrableEventSubscriptionChange>,
   baseElement: HTMLElement,
@@ -111,7 +111,7 @@ export function hydrate(
   // Process String Additions
   stringValues.forEach(value => storeString(value));
   // Process Node Addition / Removal
-  hydrateNode(skeleton, baseElement, worker);
+  skeletons.forEach(skeleton => hydrateNode(skeleton, baseElement, worker));
   // Process Event Addition
   addEvents.forEach(event => {
     const node = getNode(event[TransferrableKeys._index_]);

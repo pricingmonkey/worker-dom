@@ -35,7 +35,7 @@ export const enum MessageType {
 export interface HydrationFromWorker {
   readonly [TransferrableKeys.type]: MessageType.HYDRATE;
   readonly [TransferrableKeys.strings]: Array<string>;
-  readonly [TransferrableKeys.nodes]: HydrateableNode;
+  readonly [TransferrableKeys.nodes]: Array<HydrateableNode>;
   readonly [TransferrableKeys.addedEvents]: Array<TransferrableEventSubscriptionChange>;
 }
 export interface MutationFromWorker {

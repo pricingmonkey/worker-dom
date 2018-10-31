@@ -18,7 +18,7 @@ import { Node } from '../worker-thread/dom/Node';
 import { Document } from '../worker-thread/dom/Document';
 import { MutationRecord, MutationRecordType } from '../worker-thread/MutationRecord';
 import { TransferrableMutationRecord } from './TransferrableRecord';
-import { TransferrableNode, TransferredNode, HydrateableNode } from './TransferrableNodes';
+import { TransferrableNode, TransferredNode } from './TransferrableNodes';
 import { MessageType, MutationFromWorker, HydrationFromWorker } from './Messages';
 import { TransferrableKeys } from './TransferrableKeys';
 import { consume as consumeNodes } from '../worker-thread/NodeMapping';
@@ -36,8 +36,8 @@ const serializeNodes = (nodes: Array<Node>): Array<TransferredNode> => nodes.map
  * @param mutations
  */
 function serializeHydration(mutations: Array<MutationRecord>): HydrationFromWorker {
-  consumeNodes();
-  const hydratedNode: HydrateableNode = document.body.hydrate();
+  const hydratedBody = document.body.hydrate();
+  const otherNodes = consumeNodes().map(node => node._creationFormat_);
   const events: Array<TransferrableEventSubscriptionChange> = [];
 
   mutations.forEach(mutation => {
@@ -51,7 +51,7 @@ function serializeHydration(mutations: Array<MutationRecord>): HydrationFromWork
   return {
     [TransferrableKeys.type]: MessageType.HYDRATE,
     [TransferrableKeys.strings]: consumeStrings(),
-    [TransferrableKeys.nodes]: hydratedNode,
+    [TransferrableKeys.nodes]: [hydratedBody].concat(otherNodes),
     [TransferrableKeys.addedEvents]: events,
   };
 }
